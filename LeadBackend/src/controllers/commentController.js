@@ -1,4 +1,5 @@
 const commentService = require("../services/commentService");
+const generateSummary = require("./geminiAnalysis");
 
 exports.createComment = async (req, res) => {
   try {
@@ -18,6 +19,13 @@ exports.createComment = async (req, res) => {
       section_reference,
       comment
     );
+
+    const res = (async () => {
+      const result = await analyzeTextWithGemini(saved.comment);
+      console.log('result from analyzeTextWithGemini ',result);
+      return result;
+    })();
+    
 
     res.status(201).json(saved);
   } catch (err) {
